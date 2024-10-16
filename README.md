@@ -210,7 +210,7 @@ First, retrieve the IP address of the Gateway created earlier to route traffic t
 ```bash
 kubectl get gateway
 ```
-- This command will display the IP of the Gateway. **Copy** the external IP address from the output.
+- This command will display the IP of the Gateway. **Copy** the IP address from the output.
 
 ---
 
@@ -240,7 +240,7 @@ Simulate **2000 HTTP requests in 20 seconds** to test the auto-scaling:
 ```bash
 ddosify -n 2000 -d 20 -t http://GATEWAY_IP
 ```
-- Replace `GATEWAY_IP` with the external IP address of the Gateway from **Step 1**.
+- Replace `GATEWAY_IP` with the IP address of the Gateway from **Step 1**.
 - **-n 2000**: This means 2000 requests will be sent.
 - **-d 20**: The duration of the test is 20 seconds.
 
