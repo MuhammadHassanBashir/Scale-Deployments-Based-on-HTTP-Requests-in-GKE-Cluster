@@ -249,13 +249,18 @@ ddosify -n 2000 -d 20 -t http://GATEWAY_IP
 After the traffic simulation, you can observe the scaling events by running:
 
 ```bash
-kubectl get hpa -n demo-ns
+kubectl get hpa 
 ```
 
 Alternatively, describe the HPA to view scaling history and metrics:
 
 ```bash
-kubectl describe hpa nginx-hpa -n demo-ns
+kubectl describe hpa nginx-hpa
+```
+Or you can put the pods on watch mode to monitor them:
+
+```bash
+watch kubectl get pods
 ```
 
 ---
