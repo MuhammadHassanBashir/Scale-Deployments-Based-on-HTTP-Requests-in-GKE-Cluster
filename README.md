@@ -194,9 +194,13 @@ As load increases, the HPA will scale up pods, and as the load decreases, it wil
 
 ---
 
-## Testing the Auto-Scaling
+
+
+# Testing the Auto-Scaling
 
 To verify that the auto-scaling mechanism works based on HTTP requests per second, we'll use **Ddosify**, a tool to simulate high traffic on your NGINX service.
+
+
 
 ---
 
