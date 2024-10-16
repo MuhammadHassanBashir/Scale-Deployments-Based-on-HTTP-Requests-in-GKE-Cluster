@@ -6,12 +6,21 @@ This guide will walk you through configuring Horizontal Pod Autoscaling (HPA) in
 
 ### **Step 1: Create a Proxy-Only Subnetwork**
 1. **Navigate to the VPC Network section in the GCP Console**.
-   - Go to **VPC Network > VPC networks**.
+   - Go to **VPC Network > VPC networks > Subnets > Add Subnet**.
 
-2. **Create a new subnetwork** in the region where your GKE cluster resides (e.g., `us-central1`).
-   - **Purpose**: Select **Private Google Access**.
-   - **IP CIDR Range**: Choose an appropriate unused CIDR range (e.g., `10.0.0.0/24`).
-   - **Region**: Select the region where your GKE cluster is located (e.g., `us-central1`).
+#### **Configure the Subnetwork Properties**
+
+Fill out the necessary fields to create the Proxy-Only subnetwork:
+
+1. **Name**: Provide a unique name for your subnetwork (e.g., `proxy-only-subnet`).
+
+2. **Region**: Select the region where your **Regional Internal Load Balancer (RILB)** will be deployed. This is often `us-central1`, but confirm this based on your architecture needs.
+
+3. **IP CIDR Range**: Choose a suitable, unused **CIDR range** for the subnetwork. This range should not overlap with other networks in your VPC (e.g., `10.0.2.0/24`).
+
+4. **Purpose**: Choose **Private Google Access**. This setting ensures that only private Google services (such as load balancing) can access this subnetwork.
+
+5. **Private Google Access**: Ensure this option is **enabled** so that instances within this subnetwork can reach Google APIs privately.
 
 This ensures your cluster can communicate with Google-managed services.
 
