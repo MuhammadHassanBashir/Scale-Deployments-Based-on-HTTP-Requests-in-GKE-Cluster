@@ -18,9 +18,9 @@ Fill out the necessary fields to create the Proxy-Only subnetwork:
 
 3. **IP CIDR Range**: Choose a suitable, unused **CIDR range** for the subnetwork. This range should not overlap with other networks in your VPC (e.g., `10.0.2.0/24`).
 
-4. **Purpose**: Choose **Private Google Access**. This setting ensures that only private Google services (such as load balancing) can access this subnetwork.
+4. **Purpose**: Choose **Regional Managed Proxy**. This setting ensures that only private Google services (such as load balancing) can access this subnetwork.
 
-5. **Private Google Access**: Ensure this option is **enabled** so that instances within this subnetwork can reach Google APIs privately.
+5. **Role**: Ensure this option is **Active**.
 
 This ensures your cluster can communicate with Google-managed services.
 
