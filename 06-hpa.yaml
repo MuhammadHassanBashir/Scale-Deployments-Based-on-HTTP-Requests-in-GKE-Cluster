@@ -1,0 +1,23 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx-hpa
+  namespace: demo-ns
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nginx-deployment
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Object
+    object:
+      describedObject:
+        kind: Service
+        name: nginx-service
+      metric:
+        name: "autoscaling.googleapis.com|gclb-capacity-utilization"
+      target:
+        averageValue: 60
+        type: AverageValue
