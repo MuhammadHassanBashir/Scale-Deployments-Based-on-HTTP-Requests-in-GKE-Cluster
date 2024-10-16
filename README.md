@@ -194,4 +194,72 @@ As load increases, the HPA will scale up pods, and as the load decreases, it wil
 
 ---
 
+## Testing the Auto-Scaling
+
+To verify that the auto-scaling mechanism works based on HTTP requests per second, we'll use **Ddosify**, a tool to simulate high traffic on your NGINX service.
+
+---
+
+### **Step 1: Get the Gateway IP Address**
+First, retrieve the IP address of the Gateway created earlier to route traffic to the NGINX service:
+
+```bash
+kubectl get gateway
+```
+- This command will display the IP of the Gateway. **Copy** the external IP address from the output.
+
+---
+
+### **Step 2: Run a Ddosify Pod**
+Now, create a pod running **Ddosify** to simulate the HTTP requests load:
+
+```bash
+kubectl run ddosify --image=ddosify/ddosify --command -- sleep 7200
+```
+- This creates a pod with the Ddosify image and keeps it running for 2 hours (7200 seconds), allowing you to perform multiple tests.
+
+---
+
+### **Step 3: Exec Into the Ddosify Pod**
+Once the pod is running, access the Ddosify pod's shell to run your traffic test:
+
+```bash
+kubectl exec -it ddosify -- /bin/sh
+```
+- This opens an interactive shell inside the running Ddosify pod.
+
+---
+
+### **Step 4: Run the Traffic Test**
+Simulate **2000 HTTP requests in 20 seconds** to test the auto-scaling:
+
+```bash
+ddosify -n 2000 -d 20 -t http://GATEWAY_IP
+```
+- Replace `GATEWAY_IP` with the external IP address of the Gateway from **Step 1**.
+- **-n 2000**: This means 2000 requests will be sent.
+- **-d 20**: The duration of the test is 20 seconds.
+
+---
+
+### **Expected Outcome:**
+- The Horizontal Pod Autoscaler (HPA) will monitor the **requests per second** (RPS) reaching each pod.
+- If the load exceeds the threshold (`6 RPS` per pod, as defined earlier), the HPA will scale up the number of replicas to handle the traffic.
+
+After the traffic simulation, you can observe the scaling events by running:
+
+```bash
+kubectl get hpa -n demo-ns
+```
+
+Alternatively, describe the HPA to view scaling history and metrics:
+
+```bash
+kubectl describe hpa nginx-hpa -n demo-ns
+```
+
+---
+
+By running this test, you'll confirm that your GKE deployment scales dynamically based on HTTP traffic.
+
 Following this guide, you have now successfully set up your GKE cluster to automatically scale your NGINX deployment based on the number of HTTP requests per second.
