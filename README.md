@@ -247,7 +247,7 @@ kubectl exec -it ddosify -- /bin/sh
 Simulate **2000 HTTP requests in 20 seconds** to test the auto-scaling:
 
 ```bash
-ddosify -n 2000 -d 20 -t http://GATEWAY_IP
+ddosify -n 20000 -d 20 -t http://GATEWAY_IP
 ```
 - Replace `GATEWAY_IP` with the IP address of the Gateway from **Step 1**.
 - **-n 2000**: This means 2000 requests will be sent.
