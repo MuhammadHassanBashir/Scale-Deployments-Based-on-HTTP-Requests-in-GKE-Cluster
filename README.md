@@ -149,7 +149,7 @@ spec:
     logConfig:
       enabled: true
     config:
-      type: HTTP
+      type: TCP
       httpHealthCheck:
         portSpecification: USE_FIXED_PORT
         port: 80
