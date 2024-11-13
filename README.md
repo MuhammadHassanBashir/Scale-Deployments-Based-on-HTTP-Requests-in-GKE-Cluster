@@ -423,3 +423,29 @@ Following this guide, you have now successfully set up your GKE cluster to autom
       remember: if your have multiple deployment and you need to apply **hpa** on all deployment, so you must create saparate gateway , httproute, healthcheckpolicy and hpa for each deployment service, like i have created all the resources for citation deployment. Other wise it get failed. you can also create saparate resources using same configuration by giving them unique resources names. it will create saparate resource for the the deployment and works fine.
 
       2nd is testing should be done on the test enviroment, but when you work on any client instance, make sure not to delete the existing resources, try to find the way to fix the issue, like i have delete deployment and service, instead i got deployment and service name and use these name with my httproute , healthcheckpolicy and on hpa. with this approach, everything is working perfectly fine, and i have not deleted any thing..
+
+## Error what i faced during the hpa deployment
+
+   i deployed all the thing, but when i sent traffic on gateway using curl it get failed
+
+   kubectl get gateway     ---> get gateway ip from here,
+
+   now go inside any pod and install curl in it, and curl the gateway,
+
+   curl http://gateway    ---> i got no response
+
+   step for resolving the issue:
+   ----------------------------
+
+   1- i first check service and deployment are working fine, by sending traffic service.
+
+   i get service ip with command "k get svc" and went inside the any pod and sent traffic with curl using service ip to the service, it work fine, i got idea that my service and deployment is working fine..
+
+   2- next i describe all resource like gateway, httproute and healthcheckpolicy, hpa, everything give me response like ""success"", but my gateway could not send traffic to service.. i did some chatgpt and had found i need to check GCP load balancer, i went to the gcp load balancer and see that my gateway ip is same a load balancer ip, and my loadbalacer gave me same "healthcheck issue" like showing some unhealthy backend, 
+
+For solution:
+------------
+ 
+      I just changed healthcheckpolicy protocal from HTTP to TCP and it works fine, because healthcheck was applied on service and service was using the protocal of TCP not  HTTP, that why my traffic was not sent to service through gateway, after that it works fine. i test this by sending multiple http request traffic to the deployment and HPA scale the pods accordingly
+
+
