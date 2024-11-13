@@ -432,7 +432,7 @@ Following this guide, you have now successfully set up your GKE cluster to autom
 
    now go inside any pod and install curl in it, and curl the gateway,
 
-   curl http://gateway    ---> i got no response
+   curl http://gateway-ip    ---> i got no response
 
    step for resolving the issue:
    ----------------------------
