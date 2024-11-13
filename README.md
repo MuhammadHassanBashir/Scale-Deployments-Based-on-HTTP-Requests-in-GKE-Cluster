@@ -418,3 +418,8 @@ Following this guide, you have now successfully set up your GKE cluster to autom
             target:
               averageValue: 60
               type: AverageValue
+
+
+      remember: if your have multiple deployment and you need to apply **hpa** on all deployment, so you must create saparate gateway , httproute, healthcheckpolicy and hpa for each deployment service, like i have created all the resources for citation deployment. Other wise it get failed. you can also create saparate resources using same configuration by giving them unique resources names. it will create saparate resource for the the deployment and works fine.
+
+      2nd is testing should be done on the test enviroment, but when you work on any client instance, make sure not to delete the existing resources, try to find the way to fix the issue, like i have delete deployment and service, instead i got deployment and service name and use these name with my httproute , healthcheckpolicy and on hpa. with this approach, everything is working perfectly fine, and i have not deleted any thing..
