@@ -441,7 +441,7 @@ Following this guide, you have now successfully set up your GKE cluster to autom
 
    i get service ip with command "k get svc" and went inside the any pod and sent traffic with curl using service ip to the service, it work fine, i got idea that my service and deployment is working fine..
 
-   2- next i describe all resource like gateway, httproute and healthcheckpolicy, hpa, everything give me response like ""success"", but my gateway could not send traffic to service.. i did some chatgpt and had found i need to check GCP load balancer, i went to the gcp load balancer and see that my gateway ip is same a load balancer ip, and my loadbalacer gave me same "healthcheck issue" like showing some unhealthy backend, 
+   2- next i describe all resource like gateway, httproute and healthcheckpolicy, hpa, everything give me response like ""success"", but my gateway could not send traffic to service.. i did some chatgpt and had found i need to check GCP load balancer, i went to the gcp load balancer and see that my gateway ip is same as load balancer ip, and my loadbalacer gave me same "healthcheck issue" like showing some unhealthy backend, 
 
 For solution:
 ------------
