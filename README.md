@@ -437,7 +437,7 @@ Following this guide, you have now successfully set up your GKE cluster to autom
    step for resolving the issue:
    ----------------------------
 
-   1- i first check service and deployment are working fine, by sending traffic service.
+   1- i first check service and deployment which are working fine or not, by sending traffic service.
 
    i get service ip with command "k get svc" and went inside the any pod and sent traffic with curl using service ip to the service, it work fine, i got idea that my service and deployment is working fine..
 
