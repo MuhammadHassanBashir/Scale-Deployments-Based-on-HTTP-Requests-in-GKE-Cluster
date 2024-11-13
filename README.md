@@ -276,6 +276,144 @@ Or you can put the pods on watch mode to monitor them:
 watch kubectl get pods
 ```
 
+
+## Example of apply hpa on citation deployment
+      
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        labels:
+          app.kubernetes.io/managed-by: Helm
+        name: vertexai-citation-deployment
+        namespace: default
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: vertexai-citation
+        strategy:
+          rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 0
+          type: RollingUpdate
+        template:
+          metadata:
+            labels:
+              app: vertexai-citation
+          spec:
+            containers:
+            - image: gcr.io/world-learning-400909/vertexai-citation:old
+              imagePullPolicy: Always
+              name: vertexai-citation
+              ports:
+              - containerPort: 5000
+                protocol: TCP
+            restartPolicy: Always
+            serviceAccountName: gke-sa
+      
+      ---
+      
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: vertexai-citation-service
+        namespace: default
+        labels:
+          app: vertexai-citation
+        annotations:
+          networking.gke.io/load-balancer-type: Internal
+          networking.gke.io/max-rate-per-endpoint: "50"    # 50 Requests per Pod per second
+      spec:
+        selector:
+          app: vertexai-citation
+        ports:
+          - protocol: TCP
+            port: 80              # Port for the Service (external)
+            targetPort: 5000       # Port exposed by the container
+        type: LoadBalancer         # Exposes the Service with an external IP
+      
+      
+      ---
+      
+      apiVersion: gateway.networking.k8s.io/v1beta1
+      kind: Gateway
+      metadata:
+        name: hpa-gateway-citation
+      spec:
+        gatewayClassName: gke-l7-rilb
+        listeners:
+          - name: http
+            protocol: HTTP
+            port: 80
+      
+      ---
+      
+      apiVersion: gateway.networking.k8s.io/v1beta1
+      kind: HTTPRoute
+      metadata:
+        name: hpa-httproute
+      spec:
+        parentRefs:
+        - kind: Gateway
+          name: hpa-gateway-citation
+        rules:
+        - backendRefs:
+            - name: vertexai-citation-service
+              port: 80
+          matches:
+           - path:
+              type: PathPrefix
+              value: /
+      
+      ---
+      
+      apiVersion: networking.gke.io/v1
+      kind: HealthCheckPolicy
+      metadata:
+        name: vertexai-citation-healthcheck
+      spec:
+        default:
+          checkIntervalSec: 15
+          timeoutSec: 15
+          healthyThreshold: 3
+          unhealthyThreshold: 2
+          logConfig:
+            enabled: true
+          config:
+            type: TCP
+            httpHealthCheck:
+              portSpecification: USE_FIXED_PORT
+              port: 80
+              requestPath: /
+        targetRef:
+          group: ""
+          kind: Service
+          name: vertexai-citation-service
+      
+      ---
+      
+      apiVersion: autoscaling/v2
+      kind: HorizontalPodAutoscaler
+      metadata:
+        name: vertexai-citation-hpa
+      spec:
+        scaleTargetRef:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: vertexai-citation-deployment
+        minReplicas: 1
+        maxReplicas: 10
+        metrics:
+        - type: Object
+          object:
+            describedObject:
+              kind: Service
+              name: vertexai-citation-service
+            metric:
+              name: "autoscaling.googleapis.com|gclb-capacity-utilization"
+            target:
+              averageValue: 60
+              type: AverageValue
 ---
 
 By running this test, you'll confirm that your GKE deployment scales dynamically based on HTTP traffic.
