@@ -276,8 +276,12 @@ Or you can put the pods on watch mode to monitor them:
 watch kubectl get pods
 ```
 
+By running this test, you'll confirm that your GKE deployment scales dynamically based on HTTP traffic.
 
-## Example of apply hpa on citation deployment
+Following this guide, you have now successfully set up your GKE cluster to automatically scale your NGINX deployment based on the number of HTTP requests per second.
+
+
+## Example of apply hpa(horizantal pod autoscaler) on citation deployment
       
       apiVersion: apps/v1
       kind: Deployment
@@ -414,8 +418,3 @@ watch kubectl get pods
             target:
               averageValue: 60
               type: AverageValue
----
-
-By running this test, you'll confirm that your GKE deployment scales dynamically based on HTTP traffic.
-
-Following this guide, you have now successfully set up your GKE cluster to automatically scale your NGINX deployment based on the number of HTTP requests per second.
